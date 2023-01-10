@@ -1,3 +1,3 @@
 ## Pet Alert
-### Arduino-based project using ultrasonic sensors to monitor areas with bidirectional communication and notification via Bluetooth. 
+### ESP32 based motion detector - Informs you when your pet is waiting at the door to be let in.  
 <img src="./docs/IFRBat.svg"/>
