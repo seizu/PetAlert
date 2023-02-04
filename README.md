@@ -32,4 +32,4 @@ Telegram token are explained in detail here: https://core.telegram.org/bots#how-
 
 **Alert Text** is the placeholder text for *$text$*. The *$bat$* placeholder is replaced by the current voltage status of the battery.  
 
-**Toke** is the placeholder text for *$token$*  
+**Token** is the placeholder text for *$token$*  
