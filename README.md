@@ -31,3 +31,5 @@ If all data are correct, you can switch to **mode B**, just remove jumper J1 and
 **Alert Text** is the placeholder text for *$text$*. The *$bat$* placeholder is replaced by the current voltage status of the battery.  
 
 **Token** is the placeholder text for *$token$*  
+
+The remaining parameters are self-explanatory. It should be mentioned that the value for the **Attention timer** should be set as low as possible. A high value reduces the battery life. For example, if you set the detection counter to 4 and the attention timer to 60 seconds, the device will stay awake for 3 minutes in the worst case, because each detection resets the **Attention timer**.
