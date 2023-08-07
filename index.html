@@ -1,0 +1,312 @@
+
+      <html>
+        <head>
+          <title>PetAlert</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta charset="UTF-8">
+          <script defer data-domain="README.md" src="https://plausible.io/js/script.js"></script>
+        
+        </head>
+        <body>
+          <div id='content'>
+      <h2 id="pet-alert">Pet Alert</h2>
+<h3 id="esp32-based-motion-detector---informs-you-when-your-pet-is-waiting-at-the-door-to-be-let-in">ESP32 based motion detector - Informs you when your pet is waiting at the door to be let in.</h3>
+<p>The goal was to create a small portable motion detector that runs on battery power only and does not require an external power source. When motion is detected, a push notification is to be sent to the smartphone via WLAN. For the push notification Telegram is used, which means no additional APP is needed, except Telegram of course. The challenge was to consume little power in order to extend the operating time of the motion detector in battery mode. Below you can see a prototype without sun shield and LED.  </p>
+<p><img src="./docs/PetAlert.png"/>  </p>
+<p>Sure, there are several use cases for which a portable motion detector can be used. But as the project name suggests, we use it for our pet, more precisely for our cat. When our cat comes back from stray, she often stands unnoticed in front of the front door for hours, wanting to be let in. In the winter, she's usually pretty peeved when we finally let her in. A cat door would be a possible solution, but we opted for the PetAlert solution, which of course also works for dogs.  </p>
+<h2 id="how-it-works">How it works</h2>
+<p>The motion detector should be positioned near the front door, where your pet usually stays when it wants to be let in, within range of the WiFi signal. If no motion is detected, the device is in deep sleep mode, no active WLAN connection exists. When motion is detected, the device is awakened from deep sleep mode and monitors further motion for 30 seconds in active mode. If nothing is detected, the device automatically switches back to deep sleep mode. However, if 3 more movements are registered within the 30 seconds, a WLAN connection is established and a predefined URL is invoked. In our case, the Telegram API for push notifications. After that, the device switches to deep sleep mode for 5 minutes, during which time no further movements are detected. All mentioned parameters like time, number of movements as well as the URL are configurable via web interface.  </p>
+<p><img src="./docs/WebPrefs.png"/>  </p>
+<h2 id="web-interface">Web interface</h2>
+<p>There are 2 configuration modes for accessing the web interface.  </p>
+<p><strong>Mode A</strong> the device acts as a WLAN access point.  <br />
+<strong>Mode B</strong> the device acts as a WLAN client.  </p>
+<p><strong>Mode A</strong>  <br />
+For the very first time, the device must be placed in <strong>mode A</strong> in order to access the web interface. To do this, set jumper J1 and press the RST/EN button on the ESP32. The flashing LED1 indicates that <strong>mode A</strong> is active. The mode remains active for 5 minutes. A SSID with the initial letters PETxxxx should be visible. Now you can connect to this access point with your WLAN device. The password is "petalert". To open the web interface, simply enter http://10.100.10.1 in the address bar of your browser. You should remember the SSID, which is also the hostname of the device. Helpful in <strong>mode B</strong>, where the device is assigned a dynamic IP address. In <strong>mode A</strong> you can enter your WLAN data and assign user and password for the web interface, do not forget to save. The remaining parameters should be added in <strong>mode B</strong>.  </p>
+<p><strong>Mode B</strong>  <br />
+If all data are correct, you can switch to <strong>mode B</strong>, just remove jumper J1 and press the RST/EN button on the ESP32. The LED1 will light up constantly. If you don't know your IP address, use the hostname. Now you need to enter the previously assigned credentials for accessing the web interface (user and password) to set up the remaining parameters.  </p>
+<p><strong>Alert URL</strong> in this input field a URL can be entered, which will be called in case of an alert. The placeholders <em>$token$</em> and <em>$text$</em> are replaced by the corresponding input fields <strong>Alert Text</strong> and <strong>Token</strong>. If you want to use Telegram as a notification service, you can keep the URL <code>https://api.telegram.org/bot$token$/sendMessage?chat_id=1234567&amp;text=$text$</code> only the chat<em>id has to be changed. Instructions on how to create your personal Telegram token are explained in detail here: https://core.telegram.org/bots#how-do-i-create-a-bot. In a nutshell, you need to create a bot with your Telegram app, which will give you your token. Then you need to create a group and add the bot to the group. The only other thing you need is the chat</em>id, which is the ID of your group. I've explained the details here in section 4: https://github.com/seizu/siteping#readme  </p>
+<p><strong>Alert Text</strong> is the placeholder text for <em>$text$</em>. The <em>$bat$</em> placeholder is replaced by the current voltage status of the battery.  </p>
+<p><strong>Token</strong> is the placeholder text for <em>$token$</em>  </p>
+<p><strong>LED ON/OFF</strong> LED feedback for motion detection.  </p>
+<p><strong>Power OFF/ON</strong> OFF sends the device permanently into deep sleep mode. Keep in mind, to reactivate <strong>Power ON</strong>, the RST/EN button must be pressed to access the web interface.  </p>
+<p>The remaining parameters are self-explanatory. It should be mentioned that the value for the <strong>Attention timer</strong> should be set as low as possible. A high value reduces the battery life. For example, if you set the detection counter to 4 and the attention timer to 60 seconds, at worst the device will stay awake for 3 minutes, because each detection resets the <strong>Attention timer</strong>.  </p>
+<p><img src="./docs/Battery.png"/>  </p>
+<h2 id="battery-and-voltage-measurement">Battery and voltage measurement</h2>
+<p>The device is powered by a LiFePo4 IFR14500 battery with 600mAh. To increase the operating time of the device, you can also use the bigger brother IFR26650 with 3000mAh. Depending on which ESP32 development board you use, the device consumes too much power even in deep sleep mode due to the USB voltage regulator. There are several solutions to fix this issue. One possibility would be to simply desolder the two chips CP2103 and AMS 1117 with a heat gun after flashing the sketch. The ESP32 Firebeetle board would also be a good option, this board uses a voltage regulator which consumes little power even in deep sleep mode. However, I prefer to desolder the two chips. The battery voltage is measured by a voltage divider with two 100K ohm resistors at GPIO pin 34. The measured value must therefore be multiplied by 2. By using the 600mAh battery and the above mentioned settings at an average outdoor temperature of about 3° Celsius, the device runs for about 1 month. The battery life may vary depending on the settings and the number of notifications sent.</p>
+<h2 id="schematic">Schematic</h2>
+<p><img src="./docs/Schematic.svg"/></p>
+<h2 id="breadboard">Breadboard</h2>
+<p><img src="./docs/Breadboard.svg"/></p>
+<h2 id="parts">Parts</h2>
+<ul>
+<li>LED1: LED Red 3mm 2.0~2.4V 20mA</li>
+<li>R1,R5: 10KΩ Resistor</li>
+<li>R2: 47Ω Resistor</li>
+<li>R3,R4: 100KΩ Resistor  </li>
+<li>C1: 10uF/35V Ceramic Capacitor </li>
+<li>U1: ESP32 WROOM32 DevKit (V4)</li>
+<li>RIP1: AM312 RIP Sensor</li>
+<li>BAT1: 3.2V LiFePo4 IFR 14500 600mAh or IFR26650 3000mAh</li>
+<li>J1: Jumper Pins</li>
+<li>Battery Holder</li>
+<li>2x Half Breadboards</li>
+<li>Jumper, Jumper Cables</li>
+<li>PCB Prototyp Board 70x50mm</li>
+<li>Plastic case LxWxH 70x50x25mm (Suitable for the small battery 14500)</li>
+<li>Silver wire</li>
+<li>A short piece of PVC pipe ⌀xL 16x20mm to prevent direct sunlight on the AM312.</li>
+</ul>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>Soldering iron 15W and solder</li>
+<li>Heat gun</li>
+<li>Cutting nife</li>
+<li>Side cutter</li>
+<li>Tweezers</li>
+<li>Forstner drill or wood drill 12mm (Hole for AM312)</li>
+<li>Plastic glue or hot glue gun to stick the sun shield.</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<p>There are two ways to flash your ESP32 with the Pet Alert firmware. The first option is to compile the project and flash it with the development environment, which requires Microsoft Visual Studio Code and the PlatformformIO extension. Option two, you flash the precompiled firmware directly to your ESP32 via script. <strong>Both options require that the USB driver for your particular ESP32 model is installed.</strong>  </p>
+<p>To compile the project perform the following steps:</p>
+<ul>
+<li><p>Download and install Microsoft VS Code https://code.visualstudio.com/</p></li>
+<li><p>Download and install Git https://git-scm.com/downloads</p></li>
+<li><p>Install PlatformIO Extenstion for VS Code</p></li>
+<li><p>Open VS Code, press Ctrl+Shift+X, in the textfield search for PlatformIO and install the extension. C/C++ IntelliSense (Microsoft) will be installed automatically.</p></li>
+<li><p>Clone the Github Pet Alert repository.</p></li>
+<li><p>Press Ctrl+Shift+G and click on "Clone Repository", paste https://github.com/seizu/PetAlert.git into the textfield above and press RETURN. If "Manage Workspace Trust" appears, click on "Trust" to trust the workspace.</p></li>
+<li><p>Choose a target directory and click on "Select as Repository Destination" to download the project files. Click "Open" and click on "Yes, I trust the authors"<br />
+<img src="./docs/VSGIT.png" alt="drawing" width="800"/></p></li>
+<li><p>If everything has been installed correctly, a tiny house icon should be visible on the left side of the lower status bar. Right next to it, there is a small check mark (PlatformIO: Build), click on it to build the Pet Alert firmware.</p></li>
+<li><p>To flash the firmware connect your ESP32 to your PC using a USB cable and click on the arrow (PlatformIO: Upload) right next to the check mark. <br />
+<img src="./docs/VSPIO.png" alt="drawing" width="800"/></p></li>
+</ul>
+<p>Video  <br />
+<a href="https://youtu.be/HXESxG6hbrs"><img src="./docs/YT01.PNG" alt="Video" /></a></p>
+
+          </div>
+          <style type='text/css'>body {
+    font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #111;
+    background-color: #fbfbfb;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-feature-settings: "kern" 1;
+    -moz-font-feature-settings: "kern" 1;
+    -o-font-feature-settings: "kern" 1;
+    font-feature-settings: "kern" 1;
+    font-kerning: normal;
+    padding: 30px;
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+        padding: 5px;
+    }
+    body>#content {
+        padding: 0px 20px 20px 20px !important;
+    }
+}
+
+body>#content {
+    margin: 0px;
+    max-width: 900px;
+    border: 1px solid #e1e4e8;
+    padding: 10px 40px;
+    padding-bottom: 20px;
+    border-radius: 2px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+summary {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+hr {
+    color: #bbb;
+    background-color: #bbb;
+    height: 1px;
+    flex: 0 1 auto;
+    margin: 1em 0;
+    padding: 0;
+    border: none;
+}
+
+.hljs-operator {
+    color: #868686;
+    /* There is a bug where the syntax highlighter would pick no color for e.g. `&&` symbols in the code samples. Let's overwrite this */
+}
+
+
+/**
+ * Links
+ */
+
+a {
+    color: #0366d6;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #0366d6;
+}
+
+a:hover {
+    color: #0366d6;
+    text-decoration: underline;
+}
+
+pre {
+    background-color: #f6f8fa;
+    border-radius: 3px;
+    font-size: 85%;
+    line-height: 1.45;
+    overflow: auto;
+    padding: 16px;
+}
+
+
+/**
+  * Code blocks
+  */
+
+code {
+    background-color: rgba(27, 31, 35, .05);
+    border-radius: 3px;
+    font-size: 85%;
+    margin: 0;
+    word-wrap: break-word;
+    padding: .2em .4em;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+}
+
+pre>code {
+    background-color: transparent;
+    border: 0;
+    display: inline;
+    line-height: inherit;
+    margin: 0;
+    overflow: visible;
+    padding: 0;
+    word-wrap: normal;
+    font-size: 100%;
+}
+
+
+/**
+ * Blockquotes
+ */
+
+blockquote {
+    margin-left: 30px;
+    margin-top: 0px;
+    margin-bottom: 16px;
+    border-left-width: 3px;
+    padding: 0 1em;
+    color: #828282;
+    border-left: 4px solid #e8e8e8;
+    padding-left: 15px;
+    font-size: 18px;
+    letter-spacing: -1px;
+    font-style: italic;
+}
+
+blockquote * {
+    font-style: normal !important;
+    letter-spacing: 0;
+    color: #6a737d !important;
+}
+
+
+/**
+ * Tables
+ */
+
+table {
+    border-spacing: 2px;
+    display: block;
+    font-size: 14px;
+    overflow: auto;
+    width: 100%;
+    margin-bottom: 16px;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 6px 13px;
+    border: 1px solid #dfe2e5;
+}
+
+th {
+    font-weight: 600;
+    padding: 6px 13px;
+    border: 1px solid #dfe2e5;
+}
+
+tr {
+    background-color: #fff;
+    border-top: 1px solid #c6cbd1;
+}
+
+table tr:nth-child(2n) {
+    background-color: #f6f8fa;
+}
+
+
+/**
+ * Others
+ */
+
+img {
+    max-width: 100%;
+}
+
+p {
+    line-height: 24px;
+    font-weight: 400;
+    font-size: 16px;
+    color: #24292e;
+}
+
+ul {
+    margin-top: 0;
+}
+
+li {
+    color: #24292e;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+li+li {
+    margin-top: 0.25em;
+}
+
+* {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    color: #24292e;
+}
+
+a:visited {
+    color: #0366d6;
+}
+
+h1,
+h2,
+h3 {
+    border-bottom: 1px solid #eaecef;
+    color: #111;
+    /* Darker */
+}
+
+code>* {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
+}</style>
+          <style type='text/css'>pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;background:#282c34}.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}</style>
+        </body>
+      </html>
