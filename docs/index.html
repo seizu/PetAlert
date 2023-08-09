@@ -1,41 +1,42 @@
 
       <html>
         <head>
-          <title>PetAlert</title>
+          <title>Pet Alert</title>
           <meta name="viewport" content="width=device-width, initial-scale=1">
-          <meta charset="UTF-8">       
+          <meta charset="UTF-8">
+        
         </head>
         <body>
           <div id='content'>
-      <h2 id="pet-alert">Pet Alert</h2>
+      <h2 id="pet-alert-englishhttpswwwwartriscomgfxengpnghttpsgithubcomseizupetalertblobmasterreadmemddeutschhttpswwwwartriscomgfxdeupnghttpsgithubcomseizupetalertblobmasterreadme_demd">Pet Alert <a href="https://github.com/seizu/PetAlert/blob/master/README.md"><img src="https://www.wartris.com/gfx/eng.PNG" alt="English" /></a><a href="https://github.com/seizu/PetAlert/blob/master/README_de.md"><img src="https://www.wartris.com/gfx/deu.PNG" alt="Deutsch" /></a></h2>
 <h3 id="esp32-based-motion-detector---informs-you-when-your-pet-is-waiting-at-the-door-to-be-let-in">ESP32 based motion detector - Informs you when your pet is waiting at the door to be let in.</h3>
 <p>The goal was to create a small portable motion detector that runs on battery power only and does not require an external power source. When motion is detected, a push notification is to be sent to the smartphone via WLAN. For the push notification Telegram is used, which means no additional APP is needed, except Telegram of course. The challenge was to consume little power in order to extend the operating time of the motion detector in battery mode. Below you can see a prototype without sun shield and LED.  </p>
-<p><img src="./docs/PetAlert.png"/>  </p>
+<p><img src="PetAlert.png"/>  </p>
 <p>Sure, there are several use cases for which a portable motion detector can be used. But as the project name suggests, we use it for our pet, more precisely for our cat. When our cat comes back from stray, she often stands unnoticed in front of the front door for hours, wanting to be let in. In the winter, she's usually pretty peeved when we finally let her in. A cat door would be a possible solution, but we opted for the PetAlert solution, which of course also works for dogs.  </p>
 <h2 id="how-it-works">How it works</h2>
 <p>The motion detector should be positioned near the front door, where your pet usually stays when it wants to be let in, within range of the WiFi signal. If no motion is detected, the device is in deep sleep mode, no active WLAN connection exists. When motion is detected, the device is awakened from deep sleep mode and monitors further motion for 30 seconds in active mode. If nothing is detected, the device automatically switches back to deep sleep mode. However, if 3 more movements are registered within the 30 seconds, a WLAN connection is established and a predefined URL is invoked. In our case, the Telegram API for push notifications. After that, the device switches to deep sleep mode for 5 minutes, during which time no further movements are detected. All mentioned parameters like time, number of movements as well as the URL are configurable via web interface.  </p>
-<p><img src="./docs/WebPrefs.png"/>  </p>
+<p><img src="WebPrefs.png"/>  </p>
 <h2 id="web-interface">Web interface</h2>
 <p>There are 2 configuration modes for accessing the web interface.  </p>
 <p><strong>Mode A</strong> the device acts as a WLAN access point.  <br />
 <strong>Mode B</strong> the device acts as a WLAN client.  </p>
 <p><strong>Mode A</strong>  <br />
-For the very first time, the device must be placed in <strong>mode A</strong> in order to access the web interface. To do this, set jumper J1 and press the RST/EN button on the ESP32. The flashing LED1 indicates that <strong>mode A</strong> is active. The mode remains active for 5 minutes. A SSID with the initial letters PETxxxx should be visible. Now you can connect to this access point with your WLAN device. The password is "petalert". To open the web interface, simply enter http://10.100.10.1 in the address bar of your browser. You should remember the SSID, which is also the hostname of the device. Helpful in <strong>mode B</strong>, where the device is assigned a dynamic IP address. In <strong>mode A</strong> you can enter your WLAN data and assign user and password for the web interface, do not forget to save. The remaining parameters should be added in <strong>mode B</strong>.  </p>
+For the very first time, the device must be placed in <strong>mode A</strong> in order to access the web interface. To do this, set jumper J1 and press the RST/EN button on the ESP32. The flashing LED1 indicates that <strong>mode A</strong> is active. The mode remains active for 5 minutes. A SSID with the initial letters PET…… should be visible. Now you can connect to this access point with your WLAN device. The password is "petalert". To open the web interface, simply enter http://10.100.10.1 in the address bar of your browser. You should remember the SSID, which is also the hostname of the device. Helpful in <strong>mode B</strong>, where the device is assigned a dynamic IP address. In <strong>mode A</strong> you can enter your WLAN data and assign user and password for the web interface, do not forget to save. The remaining parameters should be added in <strong>mode B</strong>.  </p>
 <p><strong>Mode B</strong>  <br />
-If all data are correct, you can switch to <strong>mode B</strong>, just remove jumper J1 and press the RST/EN button on the ESP32. The LED1 will light up constantly. If you don't know your IP address, use the hostname. Now you need to enter the previously assigned credentials for accessing the web interface (user and password) to set up the remaining parameters.  </p>
-<p><strong>Alert URL</strong> in this input field a URL can be entered, which will be called in case of an alert. The placeholders <em>$token$</em> and <em>$text$</em> are replaced by the corresponding input fields <strong>Alert Text</strong> and <strong>Token</strong>. If you want to use Telegram as a notification service, you can keep the URL <code>https://api.telegram.org/bot$token$/sendMessage?chat_id=1234567&amp;text=$text$</code> only the chat<em>id has to be changed. Instructions on how to create your personal Telegram token are explained in detail here: https://core.telegram.org/bots#how-do-i-create-a-bot. In a nutshell, you need to create a bot with your Telegram app, which will give you your token. Then you need to create a group and add the bot to the group. The only other thing you need is the chat</em>id, which is the ID of your group. I've explained the details here in section 4: https://github.com/seizu/siteping#readme  </p>
+If all data is correct you can switch to <strong>Mode B</strong>, just remove jumper J1 and press the RST/EN button on the ESP32. The LED will light up constantly. The motion detector should now have received a dynamic IP address from your WALN router. If you do not know your IP address, use the hostname to access the web interface (e.g.: http://PET70C312). Now you need to enter the previously assigned credentials to access the web interface (user and password) to set the remaining parameters.  </p>
+<p><strong>Alert URL</strong> in this input field a URL can be entered, which will be called in case of an alert. The placeholders <em>$token$</em> and <em>$text$</em> are replaced by the corresponding input fields <strong>Alert Text</strong> and <strong>Token</strong>. If you want to use Telegram as a notification service, you can keep the URL <code>https://api.telegram.org/bot$token$/sendMessage?chat_id=1234567&amp;text=$text$</code> only the chat<em>id has to be changed. Instructions on how to create your personal Telegram token are explained in detail here: https://core.telegram.org/bots#how-do-i-create-a-bot. In a nutshell, you need to create a bot with your Telegram app, which will give you your token. Then you need to create a group and add the bot to the group. The only thing you need now is the chat</em>id - the ID of your group. I've explained the details here in section 4: https://github.com/seizu/siteping#readme  </p>
 <p><strong>Alert Text</strong> is the placeholder text for <em>$text$</em>. The <em>$bat$</em> placeholder is replaced by the current voltage status of the battery.  </p>
 <p><strong>Token</strong> is the placeholder text for <em>$token$</em>  </p>
 <p><strong>LED ON/OFF</strong> LED feedback for motion detection.  </p>
 <p><strong>Power OFF/ON</strong> OFF sends the device permanently into deep sleep mode. Keep in mind, to reactivate <strong>Power ON</strong>, the RST/EN button must be pressed to access the web interface.  </p>
-<p>The remaining parameters are self-explanatory. It should be mentioned that the value for the <strong>Attention timer</strong> should be set as low as possible. A high value reduces the battery life. For example, if you set the detection counter to 4 and the attention timer to 60 seconds, at worst the device will stay awake for 3 minutes, because each detection resets the <strong>Attention timer</strong>.  </p>
-<p><img src="./docs/Battery.png"/>  </p>
+<p>The remaining parameters are self-explanatory. It should be mentioned that the value for the <strong>Attention timer</strong> should be set as low as possible. A high value will decrease the battery runtime. For example, if you set the detection counter to 4 and the attention timer to 60 seconds, at worst the device will stay awake for 3 minutes, because each detection resets the <strong>Attention timer</strong>.  </p>
+<p><img src="Battery.png"/>  </p>
 <h2 id="battery-and-voltage-measurement">Battery and voltage measurement</h2>
-<p>The device is powered by a LiFePo4 IFR14500 battery with 600mAh. To increase the operating time of the device, you can also use the bigger brother IFR26650 with 3000mAh. Depending on which ESP32 development board you use, the device consumes too much power even in deep sleep mode due to the USB voltage regulator. There are several solutions to fix this issue. One possibility would be to simply desolder the two chips CP2103 and AMS 1117 with a heat gun after flashing the sketch. The ESP32 Firebeetle board would also be a good option, this board uses a voltage regulator which consumes little power even in deep sleep mode. However, I prefer to desolder the two chips. The battery voltage is measured by a voltage divider with two 100K ohm resistors at GPIO pin 34. The measured value must therefore be multiplied by 2. By using the 600mAh battery and the above mentioned settings at an average outdoor temperature of about 3° Celsius, the device runs for about 1 month. The battery life may vary depending on the settings and the number of notifications sent.</p>
+<p>The device is powered by a LiFePo4 IFR14500 battery with 600mAh. To increase the uptime of the device, you can also use the bigger brother IFR26650 with 3000mAh. Depending on which ESP32 development board you use, the device consumes too much power even in deep sleep mode due to the USB voltage regulator. There are several solutions to fix this problem. One possibility would be to simply desolder the two chips CP2103 and AMS 1117 with a heat gun after flashing the sketch. Don't worry, you can still flash the ESP32 afterwards. The ESP32 Firebeetle board would also be a good option, as this board uses a voltage regulator that consumes little power even in deep sleep mode. However, I prefer to desolder the two chips. The battery voltage is measured by a voltage divider with two 100K ohm resistors on GPIO pin 34. The measured value must therefore be multiplied by 2. With the 600mAh battery and the above settings at an average outdoor temperature of about 3° Celsius, the device will run for about 1 month. The battery runtime depends on the settings and the number of notifications sent.  </p>
 <h2 id="schematic">Schematic</h2>
-<p><img src="./docs/Schematic.svg"/></p>
+<p><img src="Schematic.svg"/></p>
 <h2 id="breadboard">Breadboard</h2>
-<p><img src="./docs/Breadboard.svg"/></p>
+<p><img src="Breadboard.svg"/></p>
 <h2 id="parts">Parts</h2>
 <ul>
 <li>LED1: LED Red 3mm 2.0~2.4V 20mA</li>
@@ -69,20 +70,26 @@ If all data are correct, you can switch to <strong>mode B</strong>, just remove 
 <p>There are two ways to flash your ESP32 with the Pet Alert firmware. The first option is to compile the project and flash it with the development environment, which requires Microsoft Visual Studio Code and the PlatformformIO extension. Option two, you flash the precompiled firmware directly to your ESP32 via script. <strong>Both options require that the USB driver for your particular ESP32 model is installed.</strong>  </p>
 <p>To compile the project perform the following steps:</p>
 <ul>
-<li><p>Download and install Microsoft VS Code https://code.visualstudio.com/</p></li>
-<li><p>Download and install Git https://git-scm.com/downloads</p></li>
-<li><p>Install PlatformIO Extenstion for VS Code</p></li>
-<li><p>Open VS Code, press Ctrl+Shift+X, in the textfield search for PlatformIO and install the extension. C/C++ IntelliSense (Microsoft) will be installed automatically.</p></li>
-<li><p>Clone the Github Pet Alert repository.</p></li>
-<li><p>Press Ctrl+Shift+G and click on "Clone Repository", paste https://github.com/seizu/PetAlert.git into the textfield above and press RETURN. If "Manage Workspace Trust" appears, click on "Trust" to trust the workspace.</p></li>
-<li><p>Choose a target directory and click on "Select as Repository Destination" to download the project files. Click "Open" and click on "Yes, I trust the authors"<br />
-<img src="./docs/VSGIT.png" alt="drawing" width="800"/></p></li>
-<li><p>If everything has been installed correctly, a tiny house icon should be visible on the left side of the lower status bar. Right next to it, there is a small check mark (PlatformIO: Build), click on it to build the Pet Alert firmware.</p></li>
-<li><p>To flash the firmware connect your ESP32 to your PC using a USB cable and click on the arrow (PlatformIO: Upload) right next to the check mark. <br />
-<img src="./docs/VSPIO.png" alt="drawing" width="800"/></p></li>
+<li>Download and install Microsoft VS Code https://code.visualstudio.com/</li>
+<li>Download and install Git https://git-scm.com/downloads</li>
+<li>Install PlatformIO Extenstion for VS Code</li>
+<li>Open VS Code, press Ctrl+Shift+X, in the textfield search for PlatformIO and install the extension. C/C++ IntelliSense (Microsoft) will be installed automatically.</li>
+<li>Clone the Github Pet Alert repository.</li>
+<li>Press Ctrl+Shift+G and click on "Clone Repository", paste https://github.com/seizu/PetAlert.git into the textfield above and press RETURN. If "Manage Workspace Trust" appears, click on "Trust" to trust the workspace.</li>
+<li>Choose a target directory and click on "Select as Repository Destination" to download the project files. Click "Open" and click on "Yes, I trust the authors"</li>
+<li>Another option is to clone the project from the command prompt and then open the PetAlert folder with VC code.</li>
+</ul>
+<pre><code>hljs     git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/seizu/</span>PetAlert.git
+</code></pre>
+<p><br />
+<img src="VSGIT.png" alt="drawing" width="800"/></p>
+<ul>
+<li>If everything has been installed correctly, a tiny house icon should be visible on the left side of the lower status bar. Right next to it, there is a small check mark (PlatformIO: Build), click on it to build the Pet Alert firmware.</li>
+<li>To flash the firmware connect your ESP32 to your PC using a USB cable and click on the arrow (PlatformIO: Upload) right next to the check mark. <br />
+<img src="VSPIO.png" alt="drawing" width="800"/></li>
 </ul>
 <p>Video  <br />
-<a href="https://youtu.be/HXESxG6hbrs"><img src="./docs/YT01.PNG" alt="Video" /></a></p>
+<a href="https://youtu.be/HXESxG6hbrs"><img src="YT01.PNG" alt="Video" /></a></p>
 
           </div>
           <style type='text/css'>body {
