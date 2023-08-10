@@ -7,17 +7,16 @@
 #include <WiFi.h>
 #endif
 
-
-class SimpleWiFi {        
+class SimpleWiFi {
   public:
-    SimpleWiFi(const char * ap_prefix = "", const char * ip = AP_DEFAULT_IP);		
-	bool init_client_mode(const char *ssid, const char *passwd, int retries = 30);
+    SimpleWiFi(const char *ap_prefix = "", const char *ip = AP_DEFAULT_IP);
+    bool init_client_mode(const char *ssid, const char *passwd, int retries = 30);
     bool init_ap_mode(const char *ssid, const char *passwd, int channel = 1, int hidden = 0, int max_connections = 4);
 
   private:
-		uint32_t mac;
-		char ap_ssid[33];
-		IPAddress ip;
-		//IPAddress gw;
-		//IPAddress dns;
+    uint32_t mac;
+    char ap_ssid[33];
+    IPAddress ip;
+    // IPAddress gw;
+    // IPAddress dns;
 };
