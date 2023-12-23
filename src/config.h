@@ -4,9 +4,9 @@ struct _device_config {
     char header[4];
     uint16_t check_sum;
     char wlan_ssid[33];
-    char wlan_passwd[17];
+    char wlan_passwd[64];
     char web_user[17];
-    char web_passwd[17];
+    char web_passwd[64];
     char alert_link[193];
     char alert_text[129];
     char token[101];
@@ -30,7 +30,7 @@ const std::vector<WebPrefs::input_field> input_fields = {
     {"token", "YOUR_TELEGRAM_TOKEN", WebPrefs::PASSWORD, sizeof(_device_config::token), offsetof(_device_config, token)},
     {"ddelay", "2", WebPrefs::INTEGER, sizeof(_device_config::ddelay), offsetof(_device_config, ddelay)},
     {"dthreshold", "4", WebPrefs::INTEGER, sizeof(_device_config::dthreshold), offsetof(_device_config, dthreshold)},
-    {"stimer", "30", WebPrefs::INTEGER, sizeof(_device_config::stimer), offsetof(_device_config, stimer)},
+    {"stimer", "300", WebPrefs::INTEGER, sizeof(_device_config::stimer), offsetof(_device_config, stimer)},
     {"atimer", "30", WebPrefs::INTEGER, sizeof(_device_config::atimer), offsetof(_device_config, atimer)},
     {"led", "on", WebPrefs::CHECKBOX, sizeof(_device_config::led), offsetof(_device_config, led)},
     {"power", "on", WebPrefs::CHECKBOX, sizeof(_device_config::power), offsetof(_device_config, power)}};

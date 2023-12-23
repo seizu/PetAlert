@@ -31,7 +31,7 @@
 #define AP_PREFIX "PET"
 #define AP_PASSWD "petalert"
 
-#define VERSION "1.2.0"
+#define VERSION "1.2.1"
 
 // GPIO PINS ----------------------------
 #if defined(ESP8266)
