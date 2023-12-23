@@ -107,3 +107,13 @@ To compile the project perform the following steps:
 
 Video  
 [![Video](./docs/YT01.PNG)](https://youtu.be/HXESxG6hbrs)
+
+Flashing ESP32 with ESP32
+-------------------------
+Here is an example of how to flash an ESP32 with unsoldered USB UART and voltage regulator using an ESP32.
+
+<img src="./docs/FlashESPwithESP.svg"/>
+
+1) Connect the two ESP32s as shown in the sketch above.
+2) To flash your firmware on U2 (with no CP2103 and AMS 1117), connect U1 to your PC via USB and start the flashing process.
+3) Press Boot+Reset on U2 
