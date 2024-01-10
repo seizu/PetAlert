@@ -1,5 +1,5 @@
 ## Pet Alert [![English](https://www.wartris.com/gfx/eng.PNG)](https://github.com/seizu/PetAlert/blob/master/README.md)[![Deutsch](https://www.wartris.com/gfx/deu.PNG)](https://github.com/seizu/PetAlert/blob/master/README_de.md)  
-### ESP32-basierter Bewegungsmelder - Informiert dich, wenn dein Haustier vor der Tür wartet, um hereingelassen zu werden.  
+### Kleiner tragbarer ESP32-basierter Bewegungsmelder - Informiert Sie, wenn Ihr Haustier oder ein Einbrecher an der Hintertüre steht und herein will.
 
 Ziel war es, einen kleinen, tragbaren Bewegungsmelder zu entwickeln, der nur mit Akku betrieben wird und keine externe Stromquelle benötigt. Wenn eine Bewegung erkannt wird, soll eine Push-Benachrichtigung über WLAN an das Smartphone gesendet werden. Für die Push-Benachrichtigung wird Telegram verwendet, was bedeutet, dass keine zusätzliche App benötigt wird, außer Telegram natürlich. Die Herausforderung bestand darin, wenig Strom zu verbrauchen, um die Betriebszeit des Bewegungsmelders im Akkubetrieb zu verlängern. Unten siehst du einen Prototyp ohne Sonnenschild und LED.
 
