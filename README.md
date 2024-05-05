@@ -5,6 +5,4 @@ The goal was to create a small portable motion detector that runs on battery pow
 
 <img src="./docs/PetAlert.png"/>  
 
-Full documentation
-------------------
-[![English](https://www.wartris.com/gfx/eng.PNG)](https://siezu.github.com/PetAlert/index.html)[![Deutsch](https://www.wartris.com/gfx/deu.PNG)](https://siezu.github.com/PetAlert/index_de.html)
+Full documentation on Github-Pages -> [![English](https://www.wartris.com/gfx/eng.PNG)](https://seizu.github.io/PetAlert/index.html)[![Deutsch](https://www.wartris.com/gfx/deu.PNG)](https://seizu.github.io/PetAlert/index_de.html)
