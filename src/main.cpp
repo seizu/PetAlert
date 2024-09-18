@@ -31,7 +31,7 @@
 #define AP_PREFIX "PET"
 #define AP_PASSWD "petalert"
 
-#define VERSION "1.2.1"
+#define VERSION "1.2.2"
 
 // GPIO PINS ----------------------------
 #if defined(ESP8266)
@@ -41,8 +41,8 @@
   #define BAT_PIN A0
 #elif defined(ESP32)
   #define INT_PIN 4
-  #define LED_PIN 25
-  //#define LED_PIN 22
+  //#define LED_PIN 23
+  #define LED_PIN 22
   #define APMODE_PIN 33
   #define BAT_PIN 34
   #define BUTTON_PIN_BITMASK 0x1 << INT_PIN
